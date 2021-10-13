@@ -14,8 +14,8 @@ server.listen(serverPort, () => {
 
 // GET/ API
 
-server.get("/users", (req, res) => {
-  console.log("Peticion a la ruta GET /users");
+server.get("/movies", (req, res) => {
+  console.log("Peticion a la ruta GET /movies");
   console.log(req.query);
   const response = {
     success: true,
@@ -34,10 +34,8 @@ server.get("/users", (req, res) => {
       },
     ],
   };
-  const filterdata = response.users.filter(
-    (user) => user.movies === req.query.movies
-  );
-  res.json(filterdata);
+
+  res.json(response);
 });
 
 // GET/ login ? email & pass
@@ -58,3 +56,5 @@ server.get("/users", (req, res) => {
 //   }
 
 // })
+const staticServerPathWeb = "./public-react"; // En esta carpeta ponemos los ficheros estáticos
+app.use(express.static(staticServerPathWeb));
