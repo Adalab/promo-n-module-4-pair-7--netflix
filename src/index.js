@@ -12,6 +12,21 @@ server.listen(serverPort, () => {
   console.log(`Server listening at http://localhost:${serverPort}`);
 });
 
+const movies = [
+  {
+    id: "1",
+    title: "Gambita de dama",
+    gender: "Drama",
+    image: "https://via.placeholder.com/150",
+  },
+  {
+    id: "2",
+    title: "Friends",
+    gender: "Comedia",
+    image: "https://via.placeholder.com/150",
+  },
+];
+
 // GET/ API
 
 server.get("/movies", (req, res) => {
@@ -56,5 +71,18 @@ server.get("/movies", (req, res) => {
 //   }
 
 // })
+server.get('/movies/:movieId', (req, res) => {
+  console.log(req.params.id);
+  const requestMovieId = req.params.id;
+  const requestMovieData = movies.find (movie =>movie.id === requestMovieId);
+  console.log(requestMovieData);
+  //pasarsela a la plantilla
+  console.log(req.params.id);
+  res.render('movies', requestMovieData);
+  //busca en la carpeta de views cual es la plantilla que se llama views
+  console.log(requestMovieData);
+  
+});
+
 const staticServerPathWeb = "./src/public-react"; // En esta carpeta ponemos los ficheros estáticos
 server.use(express.static(staticServerPathWeb));
