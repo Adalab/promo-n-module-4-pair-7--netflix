@@ -1,5 +1,9 @@
 const express = require("express");
 const cors = require("cors");
+const Database = require('better-sqlite3');
+const db = new Database('./src/db/database.db', { 
+  verbose: console.log
+});
 
 // create and config server
 const server = express();
@@ -34,26 +38,15 @@ const movies = [
 
 server.get("/movies", (req, res) => {
   console.log("Peticion a la ruta GET /movies");
-  console.log(req.query);
-  const response = {
-    success: true,
-    movies: [
-      {
-        id: "1",
-        title: "Gambita de dama",
-        gender: "Drama",
-        image: "https://via.placeholder.com/150",
-      },
-      {
-        id: "2",
-        title: "Friends",
-        gender: "Comedia",
-        image: "https://via.placeholder.com/150",
-      },
-    ],
-  };
-
-  res.json(response);
+  console.log(movies);
+  
+   // preparamos la query
+const query = db.prepare('SELECT * FROM movies');
+// ejecutamos la query
+const movies = query.all();
+console.log(movies);
+ 
+  res.json(movies);
 });
 
 
