@@ -5,6 +5,7 @@ const cors = require("cors");
 const server = express();
 server.use(cors());
 server.use(express.json());
+server.set('view engine', 'ejs');
 
 // init express aplication
 const serverPort = 4000;
@@ -26,6 +27,8 @@ const movies = [
     image: "https://via.placeholder.com/150",
   },
 ];
+
+
 
 // GET/ API
 
@@ -53,35 +56,15 @@ server.get("/movies", (req, res) => {
   res.json(response);
 });
 
-// GET/ login ? email & pass
 
-// server.get("login", (req, res)=>{
-//   const email =req.query.email;
-//   const pass = req.query.pass;
-
-//   if(!email || !pass){
-//     res.sendStatus(404)
-//   } else {
-//     if( email === "ivan@adalab.es" && pass ==="1234"){
-//       res.json({ userId: "123456"});
-
-//     }else{
-//       res.json({error:"Error"});
-//     }
-//   }
-
-// })
 server.get('/movies/:movieId', (req, res) => {
-  console.log(req.params.id);
-  const requestMovieId = req.params.id;
+  console.log(req.params.movieId);
+  const requestMovieId = req.params.movieId;
   const requestMovieData = movies.find (movie =>movie.id === requestMovieId);
   console.log(requestMovieData);
   //pasarsela a la plantilla
-  console.log(req.params.id);
-  res.render('movies', requestMovieData);
-  //busca en la carpeta de views cual es la plantilla que se llama views
-  console.log(requestMovieData);
-  
+  res.render('movie', requestMovieData);
+  //busca en la carpeta de views cual es la plantilla que se llama movies
 });
 
 const staticServerPathWeb = "./src/public-react"; // En esta carpeta ponemos los ficheros estáticos
