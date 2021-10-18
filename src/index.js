@@ -58,10 +58,18 @@ server.get("/movies/:movieId", (req, res) => {
 });
 
 server.post("/sign-up", (req, res) => {
-  const response = {
-    users: [{ email: userEmail, password: userPassword }],
-  };
-  console.log(response);
+ let response = req.body;
+  if(req.body.userEmail ===''||req.body.userPassword ===''){
+     response = { 
+       success: true, 
+       error: "faltan campos por rellenar"}
+  }else{
+    const query = db.prepare('INSERT INTO users (email,password) VALUES (?,?)')
+    const result = query.run(req.body.userEmail,req.body.userPassword);
+     response = { 
+      success: true, 
+      userId: result.lastInsertRowId}
+  }
   res.json(response);
 });
 
