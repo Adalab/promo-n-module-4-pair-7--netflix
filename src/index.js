@@ -1,15 +1,15 @@
 const express = require("express");
 const cors = require("cors");
-const Database = require('better-sqlite3');
-const db = new Database('./src/db/database.db', { 
-  verbose: console.log
+const Database = require("better-sqlite3");
+const db = new Database("./src/db/database.db", {
+  verbose: console.log,
 });
 
 // create and config server
 const server = express();
 server.use(cors());
 server.use(express.json());
-server.set('view engine', 'ejs');
+server.set("view engine", "ejs");
 
 // init express aplication
 const serverPort = 4000;
@@ -32,32 +32,37 @@ const movies = [
   },
 ];
 
-
-
 // GET/ API
 
 server.get("/movies", (req, res) => {
   console.log("Peticion a la ruta GET /movies");
   console.log(movies);
-  
-   // preparamos la query
-const query = db.prepare('SELECT * FROM movies');
-// ejecutamos la query
-const movies = query.all();
-console.log(movies);
- 
+
+  // preparamos la query
+  const query = db.prepare("SELECT * FROM movies");
+  // ejecutamos la query
+  const movies = query.all();
+  console.log(movies);
+
   res.json(movies);
 });
 
-
-server.get('/movies/:movieId', (req, res) => {
+server.get("/movies/:movieId", (req, res) => {
   console.log(req.params.movieId);
   const requestMovieId = req.params.movieId;
-  const requestMovieData = movies.find (movie =>movie.id === requestMovieId);
+  const requestMovieData = movies.find((movie) => movie.id === requestMovieId);
   console.log(requestMovieData);
   //pasarsela a la plantilla
-  res.render('movie', requestMovieData);
+  res.render("movie", requestMovieData);
   //busca en la carpeta de views cual es la plantilla que se llama movies
+});
+
+server.post("/sign-up", (req, res) => {
+  const response = {
+    users: [{ email: userEmail, password: userPassword }],
+  };
+  console.log(response);
+  res.json(response);
 });
 
 const staticServerPathWeb = "./src/public-react"; // En esta carpeta ponemos los ficheros estáticos
