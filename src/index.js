@@ -17,26 +17,12 @@ server.listen(serverPort, () => {
   console.log(`Server listening at http://localhost:${serverPort}`);
 });
 
-const movies = [
-  {
-    id: "1",
-    title: "Gambita de dama",
-    gender: "Drama",
-    image: "https://via.placeholder.com/150",
-  },
-  {
-    id: "2",
-    title: "Friends",
-    gender: "Comedia",
-    image: "https://via.placeholder.com/150",
-  },
-];
+
 
 // GET/ API
 
 server.get("/movies", (req, res) => {
   console.log("Peticion a la ruta GET /movies");
-  console.log(movies);
 
   // preparamos la query
   const query = db.prepare("SELECT * FROM movies");
@@ -44,7 +30,10 @@ server.get("/movies", (req, res) => {
   const movies = query.all();
   console.log(movies);
 
-  res.json(movies);
+  res.json({
+    success: true,
+    movies: movies
+  });
 });
 
 server.get("/movies/:movieId", (req, res) => {
@@ -55,6 +44,18 @@ server.get("/movies/:movieId", (req, res) => {
   //pasarsela a la plantilla
   res.render("movie", requestMovieData);
   //busca en la carpeta de views cual es la plantilla que se llama movies
+});
+
+server.get("/user/movies", (req, res) => {
+  const moviesId = req.params.moviesId;
+  const requestUserId = req.params.userId;
+  const movieIdsQuery = query.prepare('SELECT movieId FROM users_movies WHERE userId = ?')
+  const movieIds = movieIdsQuery.all(req.header('user-id'));
+  console.log(movieIds);
+  res.json( {
+    "success": true,
+    "movies": []
+ }) 
 });
 
 server.post("/sign-up", (req, res) => {
@@ -71,6 +72,16 @@ server.post("/sign-up", (req, res) => {
       userId: result.lastInsertRowId}
   }
   res.json(response);
+});
+server.get("/user/userId", (req, res) => {
+  const requestUserId = req.params.userId;
+  const movieIdsQuery = query.prepare('SELECT movieId FROM users_movies WHERE userId = ?')
+  const movieIds = movieIdsQuery.all(req.header('user-id'));
+  console.log(movieIds);
+  res.json( {
+    "success": true,
+    "user": movieIds
+ }) 
 });
 
 const staticServerPathWeb = "./src/public-react"; // En esta carpeta ponemos los ficheros estáticos
